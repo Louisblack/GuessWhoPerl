@@ -13,7 +13,10 @@ GuessWhoPerl::Schema::Result::Player
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Core';
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
 
 =head1 TABLE: C<player>
 
@@ -95,10 +98,26 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 game_winners
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-10 19:43:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:D8HVkwmk7V7QVtqO0scATw
+Type: has_many
+
+Related object: L<GuessWhoPerl::Schema::Result::Game>
+
+=cut
+
+__PACKAGE__->has_many(
+  "game_winners",
+  "GuessWhoPerl::Schema::Result::Game",
+  { "foreign.winner" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-15 20:39:00
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:jf+6Hiv2eanwxd7KMG5h+Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;

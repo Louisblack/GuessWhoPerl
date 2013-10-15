@@ -13,7 +13,10 @@ GuessWhoPerl::Schema::Result::Face
 use strict;
 use warnings;
 
-use base 'DBIx::Class::Core';
+use Moose;
+use MooseX::NonMoose;
+use MooseX::MarkAsMethods autoclean => 1;
+extends 'DBIx::Class::Core';
 
 =head1 TABLE: C<face>
 
@@ -89,10 +92,41 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+=head2 game_player1_faces
 
-# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-10 19:43:40
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:enMv/m6E3u74tb7DtJCQUQ
+Type: has_many
+
+Related object: L<GuessWhoPerl::Schema::Result::Game>
+
+=cut
+
+__PACKAGE__->has_many(
+  "game_player1_faces",
+  "GuessWhoPerl::Schema::Result::Game",
+  { "foreign.player1_face" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 game_player2_faces
+
+Type: has_many
+
+Related object: L<GuessWhoPerl::Schema::Result::Game>
+
+=cut
+
+__PACKAGE__->has_many(
+  "game_player2_faces",
+  "GuessWhoPerl::Schema::Result::Game",
+  { "foreign.player2_face" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07036 @ 2013-10-15 20:14:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Cs3bku7n83pobqmDeJ/dzQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+__PACKAGE__->meta->make_immutable;
 1;

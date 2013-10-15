@@ -20,6 +20,8 @@ WriteMakefile(
         'Test::More' => 0,
         'YAML'       => 0,
         'Dancer'     => 1.3118,
+        'Moose'      => 2.1005,
+        'DBIx::Class'=> 0.08250,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'GuessWhoPerl-*' },

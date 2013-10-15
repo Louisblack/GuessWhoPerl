@@ -5,6 +5,12 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 CREATE SCHEMA IF NOT EXISTS `guesswho` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `guesswho`;
 
+DROP TABLE GAME_FACES;
+DROP TABLE FACE;
+DROP TABLE GAME;
+DROP TABLE PLAYER;
+
+
 CREATE  TABLE IF NOT EXISTS `guesswho`.`player` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(100) NULL DEFAULT NULL ,
@@ -18,6 +24,9 @@ CREATE  TABLE IF NOT EXISTS `guesswho`.`game` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `player1` INT(11) NOT NULL ,
   `player2` INT(11) NOT NULL ,
+  `player1_face` INT(11) NOT NULL ,
+  `player2_face` INT(11) NOT NULL ,
+  `winner` INT(11) NOT NULL ,
   `fb_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`), 
   CONSTRAINT `game_fk_1`
@@ -29,7 +38,22 @@ CREATE  TABLE IF NOT EXISTS `guesswho`.`game` (
     FOREIGN KEY (`player2` )
     REFERENCES `guesswho`.`player` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION  )
+    ON UPDATE NO ACTION,
+  CONSTRAINT `game_fk_3`
+    FOREIGN KEY (`winner` )
+    REFERENCES `guesswho`.`player` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `game_fk_4`
+    FOREIGN KEY (`player1_face` )
+    REFERENCES `guesswho`.`face` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `game_fk_5`
+    FOREIGN KEY (`player2_face` )
+    REFERENCES `guesswho`.`face` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 AUTO_INCREMENT = 2590
 DEFAULT CHARACTER SET = utf8;
