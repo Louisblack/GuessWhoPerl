@@ -1,48 +1,41 @@
 package GuessWhoPerl;
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
-
-use GuessWhoPerl::Game;
-
-my $game_service = GuessWhoPerl::Game->new();
+use Facebook::Graph;
 
 our $VERSION = '0.1';
 
 get '/' => sub {
 	my $user = session('user');
-	my $games = $game_service->get_games($user->{id});
-    template 'index';
+	my @games = schema->resultset('Game')->find({player1 => $user, player2 => $user});
+    template 'index', {
+    	games => \@games
+    };
 };
 
 get '/newgame' => sub {
 	
 };
 
-get '/login' => sub {
-    template 'login', { path => vars->{requested_path} };
+get '/facebook/login' => sub {
+    my $fb = Facebook::Graph->new( config->{facebook} );
+    redirect $fb->authorize->uri_as_string;
 };
 
-post '/login' => sub {
-    if (params->{user} eq 'bob' && params->{password} eq 'letmein') {
-    	my $user = schema->resultset('Player')->find({id => params->{user}});
-    	if (!defined $user) {
-    		$user = schema->resultset('Player')->create({
-    			name     =>  params->{user},
-    			fb_id    =>  23123
-    		});
-    	}
-        session user => $user;
-        session logged_in => 1;
-        redirect '/';
-    } else {
-        redirect '/login';
-    }
+get '/facebook/postback' => sub {
+    my $authorization_code = params->{code};
+    my $fb                 = Facebook::Graph->new( config->{facebook} );
+
+    $fb->request_access_token($authorization_code);
+    session access_token => $fb->access_token;
+    redirect '/';
 };
 
 hook 'before' => sub {
-    if (! session('logged_in') && request->path_info !~ m{^/login}) {
-        var requested_path => request->path_info;
-        request->path_info('/login');
+    if (request->path_info !~ m{^/facebook}) {
+        if (session->{access_token} eq '') {
+            request->path_info('/facebook/login')
+        }
     }
 };
 

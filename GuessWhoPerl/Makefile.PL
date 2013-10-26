@@ -17,11 +17,12 @@ WriteMakefile(
       : ()),
     PL_FILES            => {},
     PREREQ_PM => {
-        'Test::More' => 0,
-        'YAML'       => 0,
-        'Dancer'     => 1.3118,
-        'Moose'      => 2.1005,
-        'DBIx::Class'=> 0.08250,
+        'Test::More'        => 0,
+        'YAML'              => 0,
+        'Dancer'            => 1.3118,
+        'Moose'             => 2.1005,
+        'DBIx::Class'       => 0.08250,
+        'Facebook::Graph'   => 1.0600
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'GuessWhoPerl-*' },
